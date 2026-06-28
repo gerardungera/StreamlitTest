@@ -33,14 +33,18 @@ def calculate_julia(width, height, max_iterations, c_real, c_imag, x_range, y_ra
 st.title("Explorador del Conjunto de Julia")
 
 st.markdown("""
-Esta aplicación demuestra el uso de **Streamlit** para visualizar fractales complejos, 
-aplicando técnicas de **caching** y **paralelismo de datos** con NumPy.
+Esta aplicación demuestra el uso de **Streamlit** para visualizar fractales, 
+aplicando NumPy.
 """)
 
 # sidebar para parámetros
 st.sidebar.header("Configuración del Fractal")
 c_r = st.sidebar.slider("C Real", -2.0, 2.0, -0.62772, step=0.01)
 c_i = st.sidebar.slider("C Imaginario", -2.0, 2.0, -0.42193, step=0.01)
+cmap = st.sidebar.selectbox(
+    'Color de cmap de la imagen de fractales',
+    ('magma', 'hot', 'cool', 'twilight_shifted')
+)
 
 st.sidebar.divider()
 res = st.sidebar.select_slider("Resolución (Ancho/Alto)", options=[250, 500, 750, 1000], value=500)
@@ -58,7 +62,7 @@ with col1:
     julia_data = calculate_julia(res, res, iters, c_r, c_i, (-1.8, 1.8), (-1.8, 1.8))
     end_time = time.time()
     fig, ax = plt.subplots(figsize=(10, 10))
-    im = ax.imshow(julia_data, extent=[-1.8, 1.8, -1.8, 1.8], cmap='magma')
+    im = ax.imshow(julia_data, extent=[-1.8, 1.8, -1.8, 1.8], cmap=cmap) 
     plt.axis('off')
     st.pyplot(fig)
 
@@ -71,4 +75,4 @@ with col2:
     El Conjunto de Julia se define por la iteración de la función:
     """)
     st.latex(r"z_{n+1} = z_n^2 + c")
-    st.write("Donde $c$ es un número complejo constante que tú controlas desde el panel lateral.")
+    st.write("Donde $c$ es un número complejo constante (controlado desde el panel lateral).")
